@@ -1,0 +1,28 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/security
+          http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <!--需要过滤不被拦截的请求-->
+    <security:http pattern="/loginPage" security="none" />
+
+    <security:http auto-config="true" use-expressions="true">
+        <security:intercept-url pattern="/**" access="hasRole('ROLE_USER')"/>
+        <security:form-login  login-page="/loginPage" authentication-failure-url="/loginPage?error=true" default-target-url="/index" login-processing-url="/login"/>
+        <security:logout invalidate-session="true" logout-success-url="/login" logout-url="/logout"/>
+        <security:csrf disabled="true"/>
+    </security:http>
+
+    <bean id="springSecurityFilter" class="org.springframework.web.filter.RequestContextFilter"/>
+    <bean id="loginService" class="com.zks.spring.security.login.service.impl.LoginServiceImpl"></bean>
+    <bean id="loginAuthenticationProvider" class="com.zks.spring.security.login.security.UserDetailsAuthenticationProvider">
+        <property name="loginService" ref="loginService"></property>
+    </bean>
+
+    <security:authentication-manager alias="myAuthenticationManager">
+        <security:authentication-provider ref="loginAuthenticationProvider"/>
+    </security:authentication-manager>
+</beans>
