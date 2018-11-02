@@ -5,24 +5,36 @@
           http://www.springframework.org/schema/beans/spring-beans.xsd
           http://www.springframework.org/schema/security
           http://www.springframework.org/schema/security/spring-security.xsd">
-
-    <!--需要过滤不被拦截的请求-->
-    <security:http pattern="/loginPage" security="none" />
-
-    <security:http auto-config="true" use-expressions="true">
-        <security:intercept-url pattern="/**" access="hasRole('ROLE_USER')"/>
-        <security:form-login  login-page="/loginPage" authentication-failure-url="/loginPage?error=true" default-target-url="/index" login-processing-url="/login"/>
-        <security:logout invalidate-session="true" logout-success-url="/login" logout-url="/logout"/>
-        <security:csrf disabled="true"/>
-    </security:http>
-
-    <bean id="springSecurityFilter" class="org.springframework.web.filter.RequestContextFilter"/>
-    <bean id="loginService" class="com.zks.spring.security.login.service.impl.LoginServiceImpl"></bean>
-    <bean id="loginAuthenticationProvider" class="com.zks.spring.security.login.security.UserDetailsAuthenticationProvider">
-        <property name="loginService" ref="loginService"></property>
+    <bean id="userChecker" class="com.zks.spring.security.login.security.UserDetailsAuthenticationChecker"/>
+    <bean id="userService" class="com.zks.spring.security.login.service.impl.UserServiceImpl">
+        <property name="studentDtoMapper" ref="studentDtoMapper"/>
     </bean>
-
+    <bean id="userCache" class="com.zks.spring.security.login.security.RamUserCache"/>
+    <bean id="loginAuthenticationProvider" class="com.zks.spring.security.login.security.UserDetailsAuthenticationProvider">
+        <property name="userService" ref="userService"/>
+        <property name="checker" ref="userChecker"/>
+        <property name="userCache" ref="userCache"/>
+        <property name="hideUserNotFoundExceptions" value="false"/>
+    </bean>
     <security:authentication-manager alias="myAuthenticationManager">
         <security:authentication-provider ref="loginAuthenticationProvider"/>
     </security:authentication-manager>
+    <!-- 登录页面不需要控制权限-->
+    <security:http security="none" pattern="/**/*.ico"/>
+    <security:http security="none" pattern="/**/*.js"/>
+    <security:http security="none" pattern="/**/*.css"/>
+    <security:http security="none" pattern="/loginPage"/>
+    <bean id="sessionAuthenticationStrategy" class="com.zks.spring.security.login.security.CustomSessionAuthenticationStrategy"/>
+    <security:http auto-config="false" use-expressions="false" authentication-manager-ref="myAuthenticationManager" >
+        <!-- 访问其他所有页面都需要有USER权限 -->
+        <security:intercept-url pattern="/**" access="ROLE_LOW" />
+        <!-- 配置登录页面地址login-page、登录失败后的跳转地址authentication-failure-url -->
+        <security:form-login login-page="/loginPage" default-target-url="/index" authentication-failure-url="/loginPage?error=1"/>
+        <!-- 登出功能 -->
+        <security:logout invalidate-session="true" logout-success-url="/loginPage"/>
+        <security:csrf disabled="true" />
+        <security:access-denied-handler error-page="/WEB-INF/views/403.jsp"/>
+        <security:session-management session-authentication-strategy-ref="sessionAuthenticationStrategy" >
+        </security:session-management>
+    </security:http>
 </beans>

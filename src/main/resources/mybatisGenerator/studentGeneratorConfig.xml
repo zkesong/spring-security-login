@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <!--<context id="Mysql" targetRuntime="MyBatis3">-->
+
+        <!--<plugin type="tk.mybatis.mapper.generator.MapperPlugin">-->
+            <!--<property name="mappers" value="tk.mybatis.mapper.common.Mapper"/>-->
+            <!--&lt;!&ndash; caseSensitive默认false，当数据库表名区分大小写时，可以将该属性设置为true &ndash;&gt;-->
+            <!--<property name="caseSensitive" value="false"/>-->
+        <!--</plugin>-->
+        <!--<jdbcConnection driverClass="com.mysql.jdbc.Driver"-->
+                        <!--connectionURL="jdbc:mysql://localhost:3306/sc?characterEncoding=utf-8"-->
+                        <!--userId="root"-->
+                        <!--password="admin">-->
+        <!--</jdbcConnection>-->
+
+        <!--<javaModelGenerator targetPackage="com.zks.spring.security.login.model.dto"-->
+                            <!--targetProject="F:\java\workspace\spring-security-login\src\main\java"/>-->
+
+        <!--<sqlMapGenerator targetPackage="mapper.sc"-->
+                         <!--targetProject="F:\java\workspace\spring-security-login\src\main\resources"/>-->
+
+        <!--<javaClientGenerator targetPackage="com.zks.spring.security.login.dao.sc"-->
+                             <!--targetProject="F:\java\workspace\spring-security-login\src\main\java"-->
+                             <!--type="XMLMAPPER" />-->
+
+        <!--<table tableName="tb_student" domainObjectName="StudentDto"/>-->
+      <!--</context>-->
+    <context id="Postgresql" targetRuntime="MyBatis3">
+
+        <plugin type="tk.mybatis.mapper.generator.MapperPlugin">
+            <property name="mappers" value="tk.mybatis.mapper.common.Mapper"/>
+            <!-- caseSensitive默认false，当数据库表名区分大小写时，可以将该属性设置为true -->
+            <property name="caseSensitive" value="false"/>
+        </plugin>
+        <jdbcConnection driverClass="org.postgresql.Driver"
+                        connectionURL="jdbc:postgresql://192.168.1.5:5432/sc?characterEncoding=utf-8"
+                        userId="postgres"
+                        password="admin">
+        </jdbcConnection>
+
+        <javaModelGenerator targetPackage="com.zks.spring.security.login.model.dto"
+                            targetProject="F:\java\workspace\spring-security-login\src\main\java"/>
+
+        <sqlMapGenerator targetPackage="mapper.sc"
+                         targetProject="F:\java\workspace\spring-security-login\src\main\resources"/>
+
+        <javaClientGenerator targetPackage="com.zks.spring.security.login.dao.sc"
+                             targetProject="F:\java\workspace\spring-security-login\src\main\java"
+                             type="XMLMAPPER" />
+
+        <table tableName="tb_student" domainObjectName="StudentDto"/>
+    </context>
+  </generatorConfiguration>

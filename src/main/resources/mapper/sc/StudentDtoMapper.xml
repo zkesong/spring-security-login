@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zks.spring.security.login.dao.sc.StudentDtoMapper" >
+  <resultMap id="BaseResultMap" type="StudentDto" >
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="CHAR" />
+    <result column="password" property="password" jdbcType="CHAR" />
+    <result column="grade" property="grade" jdbcType="CHAR" />
+    <result column="cls" property="cls" jdbcType="CHAR"/>
+    <collection property="authorities" column="name" select="getAuthoritiesById"/>
+  </resultMap>
+
+  <select id="getByUsername" resultMap="BaseResultMap" parameterType="string">
+    SELECT * FROM  tb_student WHERE name = #{username}
+  </select>
+  <select id="getAuthoritiesById" resultType="string">
+    SELECT authority FROM  tb_authorities WHERE username = #{username}
+  </select>
+</mapper>
