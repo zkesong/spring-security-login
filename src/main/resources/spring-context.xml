@@ -2,6 +2,12 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
           http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean class="com.zks.spring.security.login.components.mq.AmqMessageProducer">
+        <property name="brokerURL" value="tcp://192.168.31.65:61616"/>
+        <property name="queue" value="login-queue"/>
+        <property name="tx" value="true"/>
+    </bean>
+    <bean class="com.zks.spring.security.login.service.impl.JmServiceImpl"/>
     <import resource="spring-mybatis.xml"/>
 
     <import resource="spring-security.xml"/>
